@@ -52,5 +52,3 @@ if os.path.isdir('data/tess') is False:
     nonplanet_df.to_csv('data/tess/non_planet/tess_non_planet.csv')
     
 
-    
-    
