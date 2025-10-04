@@ -5,10 +5,14 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+<<<<<<< HEAD
+    "lightkurve>=2.5.1",
+=======
     "astropy>=7.1.0",
     "catboost>=1.2.8",
     "numpy>=2.3.3",
     "pandas>=2.3.3",
     "pyyaml>=6.0.3",
     "scikit-learn>=1.7.2",
+>>>>>>> 43c40ff7a75483f16f14cea205c67ba0bfc5c2b1
 ]
