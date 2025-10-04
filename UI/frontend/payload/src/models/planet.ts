@@ -1,39 +1,32 @@
-
 import * as THREE from 'three';
+import BaseSphereModel from './BaseSphereModel.ts'
 
-export default class planet {
+export default class planet extends BaseSphereModel {
 
   private loadedTexture: boolean = false;
   private radius : number;
 
-  constructor() {
-     this.radius = 5; // Random value for now  
-     // initialiseTexture(this.radius);
-     // initialiseShaders();
-  }
-
-  /*
-   * @brief The following function loads a specific texture from a jpeg file,
-   * this is just an internal function.
-   *
-   * @param src import jpg like the following: import something from "../assets/something.jpg"
-   * and then pass the string as something.src to provide the content of the function to threeJS
-   */
-  private loadTexture(src: string) : THREE.Texture {
-
+  constructor(radius: number = 5) {
+    super(radius);
+    this.radius = radius;
+    this.initialiseGridLines();
   }
 
   /**
-   * @brief Initialises the Shaders 
+   * @brief Initialises the grid lines
    */
-  private initialiseTexture(radius : number) {
-
+  protected initialiseGridLines() {
+    const geometry = new THREE.SphereGeometry(this.radius, 36, 36);
+    const gridMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.3 });
+    const wireframeGeometry = new THREE.WireframeGeometry(geometry);
+    const gridLines = new THREE.LineSegments(wireframeGeometry, gridMaterial);
+    this.group.add(gridLines);
   }
 
   /**
-   * @brief Initialises the Shaders 
+   * @brief Initialises the Shaders
    */
   private initialiseShaders(vertexShader : string, fragmentShader : string) {
-
+    super.initialiseShaders(vertexShader, fragmentShader);
   }
 }
