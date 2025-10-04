@@ -29,7 +29,11 @@ def main():
         print("Warning: No scaler found. Features will not be normalized.")
 
     # Load data for prediction
-    data_path = 'data/test_features.csv' if len(sys.argv) < 3 else sys.argv[2]
+    if len(sys.argv) < 3:
+        print("Error: Please provide input data path")
+        print("Usage: python predict.py [model_path] <data_path>")
+        sys.exit(1)
+    data_path = sys.argv[2]
 
     try:
         # Check if input is JSON (single sample) or CSV (batch)
@@ -46,9 +50,9 @@ def main():
             # Load batch from CSV
             df = pd.read_csv(data_path)
 
-            # Add dummy label column if not present (for compatibility)
-            if 'label' not in df.columns and len(df.columns) == 6:
-                df['label'] = 'unknown'
+            # Add placeholder label column if not present (required by DataLoader)
+            if 'label' not in df.columns:
+                df['label'] = -1  # Placeholder for unlabeled data
 
             X, _ = loader.load_features(df, normalize=True, fit_scaler=False)
             print(f"Loaded {X.shape[0]} samples for prediction")

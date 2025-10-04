@@ -29,8 +29,8 @@ def main():
 
         # Validate feature count
         if X.shape[1] != 6:
-            print(f"Warning: Expected 6 features but got {X.shape[1]}")
-            print("Expected features: planet_radii, transit_depth, days, stars_radii, earth_flux, star_temp")
+            raise ValueError(f"Expected 6 features but got {X.shape[1]}. "
+                           "Expected: planet_radii, transit_depth, days, stars_radii, earth_flux, star_temp")
 
         # Save scaler for prediction use
         os.makedirs('models', exist_ok=True)
@@ -38,31 +38,9 @@ def main():
         print("Feature scaler saved to models/feature_scaler.pkl")
 
     except FileNotFoundError:
-        print(f"Data file not found at {data_path}")
-        print("Creating dummy data with 6 features for testing...")
-        # Create dummy data matching our feature schema
-        np.random.seed(42)
-        n_samples = 1000
-
-        # Generate realistic dummy data for 6 features
-        X = np.column_stack([
-            np.random.lognormal(0, 0.5, n_samples),  # planet_radii
-            np.random.exponential(0.001, n_samples),  # transit_depth
-            np.random.lognormal(3, 1, n_samples),     # days
-            np.random.lognormal(0, 0.3, n_samples),   # stars_radii
-            np.random.lognormal(0, 0.5, n_samples),   # earth_flux
-            np.random.normal(5778, 1000, n_samples)   # star_temp
-        ])
-
-        # Normalize the dummy data
-        X = loader.normalize_features(X, fit=True)
-
-        # 3 classes: 0=confirmed, 1=candidate, 2=false_positive
-        y = np.random.choice([0, 1, 2], n_samples, p=[0.4, 0.4, 0.2])
-
-        # Save scaler even for dummy data
-        os.makedirs('models', exist_ok=True)
-        loader.save_scaler('models/feature_scaler.pkl')
+        print(f"Error: Data file not found at {data_path}")
+        print("Please ensure consolidated.csv exists at src/data/consolidated.csv")
+        sys.exit(1)
 
     # Split data
     X_train, X_test, y_train, y_test = train_test_split(
