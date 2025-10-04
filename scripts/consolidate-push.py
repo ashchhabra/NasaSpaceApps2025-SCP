@@ -92,6 +92,13 @@ def process_kepler():
     # Create "name" column from id for consistency
     df_planet_sub['name'] = 'KIC ' + df_planet_sub['id'].astype(str)
 
+    # Drop rows with any NaN or null values in these columns
+    cols_to_check = [
+        'planet_radii', 'transit_depth', 'days',
+        'star_radii', 'earth_flux', 'star_temp', 'label'
+    ]
+    df_planet_sub = df_planet_sub.dropna(subset=[col for col in cols_to_check if col in df_planet_sub.columns])
+
     # Final columns order
     final_cols = [
         'name', 'label',
@@ -150,27 +157,33 @@ def process_tess():
     # Add name and satellite columns
     df_planet_sub['name'] = 'TIC ' + df_planet_sub['id'].astype(str)
 
+    # Drop rows with any NaN or null values in these columns
+    cols_to_check = [
+        'planet_radii', 'transit_depth', 'days',
+        'star_radii', 'earth_flux', 'star_temp', 'label'
+    ]
+    df_planet_sub = df_planet_sub.dropna(subset=[col for col in cols_to_check if col in df_planet_sub.columns])
+
     # Final columns for output
     final_cols = [
-        'name', 'satellite', 'label',
+        'name', 'label',
         'planet_radii', 'transit_depth', 'days',
         'star_radii', 'earth_flux', 'star_temp'
     ]
-
-    # Only keep columns that exist in data
     final_cols_available = [col for col in final_cols if col in df_planet_sub.columns]
 
     df_planet_sub = df_planet_sub[final_cols_available]
 
-    return pd.concat([df_planet_sub], ignore_index=True)
+    return df_planet_sub
+
 
 
 # ---------- Combine and Save ----------
-df_k2 = process_k2()
+# df_k2 = process_k2()
 df_kepler = process_kepler()
 df_tess = process_tess()
 
-df_all = pd.concat([df_k2, df_kepler, df_tess], ignore_index=True)
+df_all = pd.concat([df_kepler, df_tess], ignore_index=True)
 
 consolidated_blob = container_client.get_blob_client(
     "consolidated_names_with_planet_candidate_nonplanet.csv"
