@@ -7,6 +7,6 @@ adaboost:
   early_stopping_rounds: 50
   task_type: CPU  # Change to GPU if available
 
-ensemble_strategy: voting  # Options: voting, weighted, stacking
+ensemble_strategy: weighted  # Options: voting, weighted, stacking
 
 pretrained_model_path: null  # Path to pretrained model if available

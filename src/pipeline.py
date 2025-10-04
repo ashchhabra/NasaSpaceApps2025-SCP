@@ -44,7 +44,7 @@ class ExoplanetDetectionPipeline:
         """Get predictions for input features"""
         probabilities = self.ensemble.predict_proba(X)
 
-        classes = ['confirmed', 'candidate', 'false_positive']
+        classes = ['false_positive', 'candidate', 'confirmed']
         results = []
         for i, probs in enumerate(probabilities):
             results.append({
