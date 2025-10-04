@@ -1,7 +1,6 @@
-
 import * as THREE from 'three';
 
-export default class Star {
+export default class star {
 
   private loadedTexture: boolean = false;
   private radius : number;

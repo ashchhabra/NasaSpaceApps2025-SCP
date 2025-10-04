@@ -1,7 +1,7 @@
 
 import * as THREE from 'three';
 
-export default class Planet {
+export default class planet {
 
   private loadedTexture: boolean = false;
   private radius : number;
