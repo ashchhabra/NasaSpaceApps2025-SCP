@@ -3,6 +3,7 @@ from src.data.loader import DataLoader
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, accuracy_score
 import numpy as np
+import os
 import sys
 
 def main():
@@ -76,7 +77,7 @@ def main():
     # Save model
     model_path = 'models/adaboost_exoplanet.cbm'
     print(f"\nSaving model to {model_path}")
-    import os
+
     os.makedirs('models', exist_ok=True)
     pipeline.save_model(model_path)
     print("Model saved successfully!")
