@@ -2,6 +2,8 @@ import lightkurve as lk
 import pandas as pd
 import os
 
+# i should fitler for PDC light curves because it is analysis-ready data (detrended )
+
 # Load CSV with 'name' column
 csv_path = '../consolidated_names_with_planet_candidate_nonplanet.csv'  # adjust path
 df = pd.read_csv(csv_path)
