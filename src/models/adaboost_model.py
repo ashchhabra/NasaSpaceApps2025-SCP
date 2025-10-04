@@ -21,7 +21,6 @@ class ExoplanetAdaBoostModel:
             'l2_leaf_reg': 3.0,  # L2 regularization
             'min_data_in_leaf': 20,  # Prevent overfitting on small datasets
             'random_strength': 0.5,  # Add randomness for better generalization
-            'bagging_temperature': 0.5  # Controls randomness in bagging
         }
         self.config = {**default_config, **(config or {})}
         self.model = CatBoostClassifier(**self.config)
