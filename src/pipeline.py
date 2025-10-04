@@ -2,6 +2,7 @@ import yaml
 from typing import Dict
 import numpy as np
 from src.models.adaboost_model import ExoplanetAdaBoostModel
+from src.models.randm_forest_model import ExoplanetRandomForestModel
 from src.models.ensemble import ExoplanetEnsemble
 from src.data.loader import DataLoader
 
@@ -25,9 +26,14 @@ class ExoplanetDetectionPipeline:
         adaboost_model = ExoplanetAdaBoostModel(adaboost_config)
         models.append(adaboost_model)
 
+        # random forest base model
+        randm_config = self.config.get('randm_forest', {})
+        randm_forest_model = ExoplanetRandomForestModel(randm_config)
+        models.append(randm_forest_model)
+
         # Add pretrained models if available
         if self.config.get('pretrained_model_path'):
-            pretrained = ExoplanetAdaBoostModel()
+            pretrained = ExoplanetRandomForestModel() # commented
             pretrained.load_model(self.config['pretrained_model_path'])
             models.append(pretrained)
 

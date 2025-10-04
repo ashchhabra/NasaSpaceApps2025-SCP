@@ -51,7 +51,7 @@ class ExoplanetRandomForestModel:
             y_pred = (y_prob >= 0.5).astype(int)
             acc = accuracy_score(y_val, y_pred)
             p, r, f1, _ = precision_recall_fscore_support(
-                y_val, y_pred, average="binary", zero_division=0
+                y_val, y_pred, average="weighted", zero_division=0
             )
             print(
                 f"[RF] Validation — Acc: {acc:.3f} | F1: {f1:.3f} | "
@@ -64,6 +64,18 @@ class ExoplanetRandomForestModel:
 
     def predict(self, X: ArrayLike) -> np.ndarray:
         return self.model.predict(X)
+    
+    def get_feature_importance(self):
+         """Get feature importances from the trained model"""
+         if hasattr(self.model, 'feature_importances_'):
+            return self.model.feature_importances_
+         return None
+    
+    def get_training_history(self):
+        """Get training history including loss values"""
+        if hasattr(self.model, 'evals_result_'):
+            return self.model.evals_result_
+        return None
 
     def save_model(self, path: str) -> None:
         joblib.dump({"model": self.model, "config": self.config}, path) # save
