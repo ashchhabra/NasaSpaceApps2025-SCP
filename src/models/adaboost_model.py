@@ -14,7 +14,7 @@ class ExoplanetAdaBoostModel:
             'bootstrap_type': 'Bernoulli',
             'subsample': 0.8,  # Higher subsample for smaller feature space
             'random_seed': 42,
-            'verbose': False,
+            'verbose': 100,  # Show progress every 100 iterations
             'early_stopping_rounds': 50,
             'task_type': 'CPU',  # or 'GPU' if available
             'auto_class_weights': 'Balanced',  # Handle class imbalance
