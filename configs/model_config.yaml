@@ -7,6 +7,16 @@ adaboost:
   early_stopping_rounds: 50
   task_type: CPU  # Change to GPU if available
 
+random_forest:
+  n_estimators: 400
+  max_depth: 10
+  min_samples_split: 5
+  min_samples_leaf: 3
+  max_features: sqrt
+  class_weight: balanced
+  n_jobs: -1
+
 ensemble_strategy: voting  # Options: voting, weighted, stacking
 
 pretrained_model_path: null  # Path to pretrained model if available
+

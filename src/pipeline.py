@@ -2,6 +2,7 @@ import yaml
 from typing import Dict
 import numpy as np
 from src.models.adaboost_model import ExoplanetAdaBoostModel
+from src.models.random_forest_model import ExoplanetRandomForestModel
 from src.models.ensemble import ExoplanetEnsemble
 from src.data.loader import DataLoader
 
@@ -25,13 +26,16 @@ class ExoplanetDetectionPipeline:
         adaboost_model = ExoplanetAdaBoostModel(adaboost_config)
         models.append(adaboost_model)
 
+        # Random Forest model
+        random_forest_config = self.config.get('random_forest', {})
+        rf_model = ExoplanetRandomForestModel(random_forest_config)
+        models.append(rf_model)
+
         # Add pretrained models if available
         if self.config.get('pretrained_model_path'):
             pretrained = ExoplanetAdaBoostModel()
             pretrained.load_model(self.config['pretrained_model_path'])
             models.append(pretrained)
-
-        # Future: Add Random Forest or other models here
 
         strategy = self.config.get('ensemble_strategy', 'voting')
         return ExoplanetEnsemble(models, strategy=strategy)
@@ -44,7 +48,7 @@ class ExoplanetDetectionPipeline:
         """Get predictions for input features"""
         probabilities = self.ensemble.predict_proba(X)
 
-        classes = ['confirmed', 'candidate', 'false_positive']
+        classes = ['false_positive', 'candidate', 'confirmed']
         results = []
         for i, probs in enumerate(probabilities):
             results.append({
@@ -59,9 +63,27 @@ class ExoplanetDetectionPipeline:
         return self.predict(feature_data)
 
     def save_model(self, path: str):
-        """Save the primary model"""
-        self.ensemble.models[0].save_model(path)
+        """Save all models in the ensemble"""
+        import os
+        base_dir = os.path.dirname(path)
+
+        # Save CatBoost model (model 0)
+        catboost_path = os.path.join(base_dir, 'adaboost_exoplanet.cbm')
+        self.ensemble.models[0].save_model(catboost_path)
+
+        # Save Random Forest model (model 1)
+        rf_path = os.path.join(base_dir, 'random_forest.pkl')
+        self.ensemble.models[1].save_model(rf_path)
 
     def load_model(self, path: str):
-        """Load a saved model"""
-        self.ensemble.models[0].load_model(path)
+        """Load all models in the ensemble"""
+        import os
+        base_dir = os.path.dirname(path)
+
+        # Load CatBoost model (model 0)
+        catboost_path = os.path.join(base_dir, 'adaboost_exoplanet.cbm')
+        self.ensemble.models[0].load_model(catboost_path)
+
+        # Load Random Forest model (model 1)
+        rf_path = os.path.join(base_dir, 'random_forest.pkl')
+        self.ensemble.models[1].load_model(rf_path)

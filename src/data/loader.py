@@ -17,16 +17,17 @@ class DataLoader:
 
     # Class labels mapping
     CLASS_LABELS = {
-        'confirmed': 0,
+        'false_positive': 0,
         'candidate': 1,
-        'false_positive': 2
+        'confirmed': 2
     }
 
     def __init__(self):
         """Enhanced loader with feature validation and normalization"""
         self.scaler = StandardScaler()
         self.label_encoder = LabelEncoder()
-        self.label_encoder.classes_ = np.array(['confirmed', 'candidate', 'false_positive'])
+        self.label_encoder.classes_ = np.array(['false_positive', 'candidate', 'confirmed'])
+        self.names = None  # Store names if present
 
     def validate_features(self, df: pd.DataFrame) -> pd.DataFrame:
         """Validate and reorder features to match expected schema"""
@@ -86,16 +87,33 @@ class DataLoader:
         else:
             raise ValueError("Unsupported data format")
 
-        # Validate features if columns match expected names
-        if all(feat in df.columns for feat in self.EXPECTED_FEATURES):
-            df = self.validate_features(df)
-            features = df[self.EXPECTED_FEATURES].values
-        else:
-            # Assume first n columns are features, last is label
-            features = df.iloc[:, :-1].values
+        # Store names if present (for tracking purposes)
+        if 'name' in df.columns:
+            self.names = df['name'].values
 
-        # Get labels (last column)
-        labels = df.iloc[:, -1]
+        # Drop non-feature columns but keep for reference
+        df_clean = df.copy()
+        if 'Unnamed: 0' in df_clean.columns:
+            df_clean = df_clean.drop('Unnamed: 0', axis=1)
+        if 'name' in df_clean.columns:
+            df_clean = df_clean.drop('name', axis=1)
+
+        # Validate features if columns match expected names
+        if all(feat in df_clean.columns for feat in self.EXPECTED_FEATURES):
+            df_clean = self.validate_features(df_clean)
+            features = df_clean[self.EXPECTED_FEATURES].values.astype(np.float32)
+        else:
+            # Assume all columns except 'label' are features
+            feature_cols = [col for col in df_clean.columns if col != 'label']
+            features = df_clean[feature_cols].values.astype(np.float32)
+
+        # Get labels - check for 'label' column or use last column
+        if 'label' in df_clean.columns:
+            labels = df_clean['label']
+        elif 'label' in df.columns:
+            labels = df['label']
+        else:
+            labels = df_clean.iloc[:, -1]
         encoded_labels = self.encode_labels(labels)
 
         # Check for NaN values
