@@ -1,4 +1,4 @@
-import IOperation from './OperationInterface.ts'
+import IOperation from './OperationInterface'
 
 export class Pipeline<T> implements IOperation<T> {
      private readonly operations: IOperation<T>[] = [];

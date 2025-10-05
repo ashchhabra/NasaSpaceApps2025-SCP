@@ -1,5 +1,5 @@
 "use client";
-import Engine from './Engine.tsx'
+import Engine from './Engine'
 
 const Entry: React.FC = () => {
 

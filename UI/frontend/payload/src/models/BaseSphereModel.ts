@@ -14,7 +14,7 @@ export default class BaseSphereModel {
    * @brief Initialises grid lines - base implementation
    * This method can be overridden by child classes
    */
-  protected initialiseGridLines() {
+  initialiseGridLines() {
     // Base implementation - can be overridden by child classes
   }
 

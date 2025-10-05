@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import BaseSphereModel from './BaseSphereModel.ts'
+import BaseSphereModel from './BaseSphereModel'
 
 export default class star extends BaseSphereModel {
 
@@ -15,7 +15,7 @@ export default class star extends BaseSphereModel {
   /**
    * @brief Initialises the grid lines
    */
-  private initialiseGridLines() {
+  initialiseGridLines() {
     const geometry = new THREE.SphereGeometry(this.radius, 36, 36);
     const gridMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.3 });
     const wireframeGeometry = new THREE.WireframeGeometry(geometry);
@@ -26,7 +26,7 @@ export default class star extends BaseSphereModel {
   /**
    * @brief Initialises the Shaders
    */
-  private initialiseShaders(vertexShader : string, fragmentShader : string) {
+  initialiseShaders(vertexShader : string, fragmentShader : string) {
     super.initialiseShaders(vertexShader, fragmentShader);
   }
 

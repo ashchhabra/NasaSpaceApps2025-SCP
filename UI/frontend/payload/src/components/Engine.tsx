@@ -4,6 +4,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import * as THREE from 'three';
 import planet from '../models/planet';
 import star from '../models/star';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+
 /**
  *
  *  Engine
@@ -12,11 +14,11 @@ import star from '../models/star';
  *
  */
 
-interface EngineProps {
-// Add all the stuff you need to pass into the Engine here.
-}
+// interface EngineProps {
+// // Add all the stuff you need to pass into the Engine here.
+// }
 
-const Engine: React.FC<EngineProps> = () => {
+const Engine: React.FC = () => {
 
   // -------------------- Initialize THREEJS Variables -----------------------
   const mountRef = useRef<HTMLDivElement>(null);
@@ -25,7 +27,7 @@ const Engine: React.FC<EngineProps> = () => {
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const planetRef = useRef<planet | null>(null);
   const starRef = useRef<star | null>(null);
-  const controlsRef = useRef<any | null>(null);
+  const controlsRef = useRef<InstanceType<typeof OrbitControls> | null>(null);
   const initialisedScene = useRef<boolean>(false);
 
   // First-time initialization of all Three.js entities
@@ -48,20 +50,18 @@ const Engine: React.FC<EngineProps> = () => {
     mount.appendChild(rendererRef.current.domElement);
 
     // Initialize controls - dynamically import OrbitControls
-    import('three/examples/jsm/controls/OrbitControls').then(({ OrbitControls }) => {
-      if (cameraRef.current && rendererRef.current) {
-        controlsRef.current = new OrbitControls(cameraRef.current, rendererRef.current.domElement);
-        controlsRef.current.enableZoom = true;
-      }
-    });
+    controlsRef.current = new OrbitControls(cameraRef.current, rendererRef.current.domElement);
+    controlsRef.current.enableZoom = true;
   };
 
   // Initialize the world
   const initialiseWorld = () => {
     planetRef.current = new planet();
     starRef.current = new star();
-    sceneRef.current.add(planetRef.current.group);
-    sceneRef.current.add(starRef.current.group);
+    if (sceneRef.current) {
+      sceneRef.current.add(planetRef.current.group);
+      sceneRef.current.add(starRef.current.group);
+    }
   }
 
   // Handle window resize
@@ -78,8 +78,9 @@ const Engine: React.FC<EngineProps> = () => {
   // Animation loop
   const animate = () => {
     requestAnimationFrame(animate);
-
-    rendererRef.current.render(sceneRef.current, cameraRef.current);
+    if (rendererRef.current && sceneRef.current && cameraRef.current) {
+      rendererRef.current.render(sceneRef.current, cameraRef.current);
+    }
 
     // Update controls
     if (controlsRef.current) {
