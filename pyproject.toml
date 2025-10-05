@@ -15,4 +15,5 @@ dependencies = [
     "tsfresh>=0.21.1",
     "traitlets>=5.14.3",
     "ipywidgets>=8.1.7",
+    "gradio>=5.49.0",
 ]
