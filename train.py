@@ -20,7 +20,7 @@ def main():
     loader = DataLoader()
 
     # Load training data - expects 6 features + label
-    data_path = 'src/data/consolidated.csv' if len(sys.argv) < 3 else sys.argv[2]
+    data_path = 'src/data/relabelled_consolidated.csv' if len(sys.argv) < 3 else sys.argv[2]
 
     try:
         # Load with normalization and fit the scaler
