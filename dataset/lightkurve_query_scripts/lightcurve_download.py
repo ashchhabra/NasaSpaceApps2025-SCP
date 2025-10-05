@@ -38,7 +38,14 @@ for idx, row in df.iterrows():
             download_paths.append('')
             continue
         
-        lc_collection = search_result.download()
+        # might set quality_bitmask to default or hard (scricter) for best quality curves
+        # Why use "hard"?
+        # Strict filtering: "hard" removes all data points flagged with any known instrumental issue, including subtle artifacts that "default" might allow.
+
+        # Cleaner training sets: This reduces risk of learning instrument noise patterns instead of real astrophysical signals.
+
+        # Best for ML: Most ML models (especially deep learning) benefit from the cleanest data possible to minimize overfitting on noise artifacts.
+        lc_collection = search_result.download(quality_bitmask='hard')
 
         saved_files = []
         for i, lc in enumerate(lc_collection):
