@@ -136,26 +136,83 @@ Number of models: 2
 ============================================================
 
 Loaded data: 16262 samples, 6 features
+Feature scaler saved to models/feature_scaler.pkl
 Training ensemble...
 Training set: 10407 samples
 Validation set: 2602 samples
 Test set: 3253 samples
+Training ensemble with 2 models (voting strategy)
+MetricVisualizer(layout=Layout(align_self='stretch', height='500px'))
+0:      learn: 1.0578358        test: 1.0582614 best: 1.0582614 (0)     total: 165ms    remaining: 2m 44s
+50:     learn: 0.6669999        test: 0.6840484 best: 0.6840484 (50)    total: 388ms    remaining: 7.21s
+100:    learn: 0.6125008        test: 0.6559793 best: 0.6559793 (100)   total: 603ms    remaining: 5.37s
+150:    learn: 0.5636452        test: 0.6471064 best: 0.6471064 (150)   total: 818ms    remaining: 4.6s
+200:    learn: 0.5200573        test: 0.6442884 best: 0.6442884 (200)   total: 1.04s    remaining: 4.13s
+250:    learn: 0.4866641        test: 0.6432567 best: 0.6432567 (250)   total: 1.27s    remaining: 3.81s
+300:    learn: 0.4588028        test: 0.6428300 best: 0.6428300 (300)   total: 1.52s    remaining: 3.52s
+350:    learn: 0.4338512        test: 0.6447653 best: 0.6428300 (300)   total: 1.74s    remaining: 3.22s
+400:    learn: 0.4122545        test: 0.6448903 best: 0.6428300 (300)   total: 1.96s    remaining: 2.92s
+450:    learn: 0.3925005        test: 0.6455186 best: 0.6428300 (300)   total: 2.18s    remaining: 2.65s
+500:    learn: 0.3747457        test: 0.6475995 best: 0.6428300 (300)   total: 2.4s     remaining: 2.39s
+550:    learn: 0.3583637        test: 0.6500379 best: 0.6428300 (300)   total: 2.62s    remaining: 2.13s
+600:    learn: 0.3435451        test: 0.6533603 best: 0.6428300 (300)   total: 2.84s    remaining: 1.89s
+650:    learn: 0.3301001        test: 0.6588116 best: 0.6428300 (300)   total: 3.05s    remaining: 1.64s
+700:    learn: 0.3176209        test: 0.6628574 best: 0.6428300 (300)   total: 3.28s    remaining: 1.4s
+750:    learn: 0.3052090        test: 0.6695014 best: 0.6428300 (300)   total: 3.5s     remaining: 1.16s
+800:    learn: 0.2946370        test: 0.6744489 best: 0.6428300 (300)   total: 3.72s    remaining: 925ms
+850:    learn: 0.2842861        test: 0.6799310 best: 0.6428300 (300)   total: 3.94s    remaining: 690ms
+900:    learn: 0.2752635        test: 0.6851240 best: 0.6428300 (300)   total: 4.15s    remaining: 456ms
+950:    learn: 0.2663777        test: 0.6911642 best: 0.6428300 (300)   total: 4.37s    remaining: 225ms
+999:    learn: 0.2581234        test: 0.6962506 best: 0.6428300 (300)   total: 4.58s    remaining: 0us
 
-[Training progress...]
+bestTest = 0.6428299855
+bestIteration = 300
+
+Shrink model to first 301 iterations.
+
+✓ Model converged at iteration 300
+  (Early stopped after 350 iterations)
+
+Training Random Forest with 400 trees...
+  Training data: 10407 samples, 6 features
+  Class distribution: [ 680 3047 6680]
+[Parallel(n_jobs=-1)]: Using backend ThreadingBackend with 12 concurrent workers.
+[Parallel(n_jobs=-1)]: Done  26 tasks      | elapsed:    0.1s
+[Parallel(n_jobs=-1)]: Done 176 tasks      | elapsed:    0.6s
+[Parallel(n_jobs=-1)]: Done 400 out of 400 | elapsed:    1.4s finished
+✓ Random Forest training complete
+  Out-of-bag score: 0.7800
+[Parallel(n_jobs=12)]: Using backend ThreadingBackend with 12 concurrent workers.
+[Parallel(n_jobs=12)]: Done  26 tasks      | elapsed:    0.0s
+[Parallel(n_jobs=12)]: Done 176 tasks      | elapsed:    0.0s
+[Parallel(n_jobs=12)]: Done 400 out of 400 | elapsed:    0.0s finished
+  Validation accuracy: 0.7844
 
 ============================================================
 INDIVIDUAL MODEL PERFORMANCE
 ============================================================
 
 AdaBoost:
-  Test Accuracy: 0.6545
+  Test Accuracy: 0.7661
+[Parallel(n_jobs=12)]: Using backend ThreadingBackend with 12 concurrent workers.
+[Parallel(n_jobs=12)]: Done  26 tasks      | elapsed:    0.0s
+[Parallel(n_jobs=12)]: Done 176 tasks      | elapsed:    0.0s
+[Parallel(n_jobs=12)]: Done 400 out of 400 | elapsed:    0.1s finished
 
 RandomForest:
-  Test Accuracy: 0.6422
+  Test Accuracy: 0.7664
 
 ============================================================
 ENSEMBLE PERFORMANCE
 ============================================================
+
+Evaluating ensemble on test set...
+[Parallel(n_jobs=12)]: Using backend ThreadingBackend with 12 concurrent workers.
+[Parallel(n_jobs=12)]: Done  26 tasks      | elapsed:    0.0s
+[Parallel(n_jobs=12)]: Done 176 tasks      | elapsed:    0.0s
+[Parallel(n_jobs=12)]: Done 400 out of 400 | elapsed:    0.0s finished
+
+Test Accuracy: 0.7698
 
 Detailed Classification Report:
                 precision    recall  f1-score   support
@@ -163,6 +220,32 @@ Detailed Classification Report:
 false_positive       0.35      0.53      0.42       212
      candidate       0.63      0.70      0.66       953
      confirmed       0.92      0.83      0.87      2088
+
+      accuracy                           0.77      3253
+     macro avg       0.63      0.69      0.65      3253
+  weighted avg       0.80      0.77      0.78      3253
+
+
+Confusion Matrix:
+              Predicted
+             FalsePos  Cand  Conf
+Actual FalsePos :  113   82   17
+Actual Candidate:  151  667  135
+Actual Confirmed:   58  306 1724
+
+Feature Importances:
+  planet_radii   : 21.9272
+  transit_depth  : 20.8214
+  days           : 17.4513
+  stars_radii    : 15.2009
+  earth_flux     : 13.5740
+  star_temp      : 11.0251
+
+Saving models...
+All models and scaler saved successfully!
+  - models/adaboost_exoplanet.cbm
+  - models/random_forest.pkl
+  - models/feature_scaler.pkl
 ```
 
 ### Saved Models
