@@ -98,7 +98,7 @@ KIC 10797460,2,2.26,615.8,9.48803557,0.927,93.59,5455.0
 ### Setup
 ```bash
 # Clone repository
-git clone <repo-url>
+git clone https://github.com/ashchhabra/NasaSpaceApps2025-SCP.git
 cd NasaSpaceApps2025-SCP
 
 # Install dependencies using uv
