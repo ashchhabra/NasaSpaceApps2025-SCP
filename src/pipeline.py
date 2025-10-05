@@ -2,7 +2,7 @@ import yaml
 from typing import Dict
 import numpy as np
 from src.models.adaboost_model import ExoplanetAdaBoostModel
-from src.models.randm_forest_model import ExoplanetRandomForestModel
+from src.models.random_forest_model import ExoplanetRandomForestModel
 from src.models.ensemble import ExoplanetEnsemble
 from src.data.loader import DataLoader
 import os
@@ -28,18 +28,17 @@ class ExoplanetDetectionPipeline:
         adaboost_model = ExoplanetAdaBoostModel(adaboost_config)
         models.append(adaboost_model)
 
-        # random forest base model
-        randm_config = self.config.get('randm_forest', {})
-        randm_forest_model = ExoplanetRandomForestModel(randm_config)
-        models.append(randm_forest_model)
+        # Random Forest model
+        random_forest_config = self.config.get('random_forest', {})
+        rf_model = ExoplanetRandomForestModel(random_forest_config)
+        models.append(rf_model)
 
         # Add pretrained models if available
-        '''
+    
         if self.config.get('pretrained_model_path'):
             pretrained = ExoplanetRandomForestModel() 
             pretrained.load_model(self.config['pretrained_model_path'])
             models.append(pretrained)
-        '''
         strategy = self.config.get('ensemble_strategy', 'voting')
         return ExoplanetEnsemble(models, strategy=strategy)
 
@@ -66,30 +65,27 @@ class ExoplanetDetectionPipeline:
         return self.predict(feature_data)
 
     def save_model(self, path: str):
-        #self.ensemble.models[0].save_model(path)
-        """
-        Save all trained models in the ensemble.
-        Example:
-            base_path='models/ensemble_exoplanet'
-        """
-        os.makedirs(os.path.dirname(path), exist_ok=True)
-        meta = []
+        """Save all models in the ensemble"""
+        import os
+        base_dir = os.path.dirname(path)
 
-        for model in self.ensemble.models:
-            model_name = model.__class__.__name__.replace("Exoplanet", "").replace("Model", "").lower()
-            model_path = f"{path}_{model_name}.pkl"
-            model.save_model(model_path)
-            print(f"Saved {model_name} model to {model_path}")
-            meta.append({"name": model_name, "path": model_path})
+        # Save CatBoost model (model 0)
+        catboost_path = os.path.join(base_dir, 'adaboost_exoplanet.cbm')
+        self.ensemble.models[0].save_model(catboost_path)
 
-        # Save ensemble metadata
-        meta_path = f"{path}_meta.pkl"
-        joblib.dump({
-            "ensemble_strategy": self.ensemble.strategy,
-            "models": meta
-        }, meta_path)
-        print(f"Saved ensemble metadata to {meta_path}")
+        # Save Random Forest model (model 1)
+        rf_path = os.path.join(base_dir, 'random_forest.pkl')
+        self.ensemble.models[1].save_model(rf_path)
 
     def load_model(self, path: str):
-        """Load a saved model"""
-        self.ensemble.models[0].load_model(path)
+        """Load all models in the ensemble"""
+        import os
+        base_dir = os.path.dirname(path)
+
+        # Load CatBoost model (model 0)
+        catboost_path = os.path.join(base_dir, 'adaboost_exoplanet.cbm')
+        self.ensemble.models[0].load_model(catboost_path)
+
+        # Load Random Forest model (model 1)
+        rf_path = os.path.join(base_dir, 'random_forest.pkl')
+        self.ensemble.models[1].load_model(rf_path)

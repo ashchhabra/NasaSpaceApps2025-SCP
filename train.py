@@ -60,8 +60,23 @@ def main():
 
     pipeline.train(X_train, y_train, X_val, y_val)
 
-    # Evaluate
-    print("\nEvaluating on test set...")
+    # Evaluate individual models first
+    print("\n" + "="*60)
+    print("INDIVIDUAL MODEL PERFORMANCE")
+    print("="*60)
+
+    for i, model in enumerate(pipeline.ensemble.models):
+        model_name = type(model).__name__.replace('Exoplanet', '').replace('Model', '')
+        y_pred_individual = model.predict(X_test)
+        accuracy_individual = accuracy_score(y_test, y_pred_individual)
+        print(f"\n{model_name}:")
+        print(f"  Test Accuracy: {accuracy_individual:.4f}")
+
+    # Evaluate ensemble
+    print("\n" + "="*60)
+    print("ENSEMBLE PERFORMANCE")
+    print("="*60)
+    print("\nEvaluating ensemble on test set...")
     predictions = pipeline.predict(X_test)
 
     # Convert probabilities to class indices
@@ -99,13 +114,14 @@ def main():
     except:
         pass
 
-    # Save model
-    #model_path = 'models/adaboost_exoplanet.cbm'
-    #model_path = 'models/randm_forest_exoplanet.joblib' # commented
-    model_path = 'models/ensemble_exoplanet'
-    print(f"\nSaving model to {model_path}")
+    # Save models
+    model_path = 'models/adaboost_exoplanet.cbm'
+    print(f"\nSaving models...")
     pipeline.save_model(model_path)
-    print("Model and scaler saved successfully!")
+    print("All models and scaler saved successfully!")
+    print("  - models/adaboost_exoplanet.cbm")
+    print("  - models/random_forest.pkl")
+    print("  - models/feature_scaler.pkl")
 
 if __name__ == "__main__":
     main()
