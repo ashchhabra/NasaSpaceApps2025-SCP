@@ -8,7 +8,7 @@
     <td style="vertical-align: middle;">
       <h1 style="margin: 0;">Overview</h1>
       <p style="margin: 5px 0 0 0;">
-        A machine learning pipeline for classifying exoplanet candidates from transit photometry data. This project uses ensemble learning to distinguish between confirmed exoplanets, planet candidates, and false positives based on six key physical features extracted from Kepler mission data.
+        A machine learning pipeline for classifying exoplanet candidates from transit photometry data. This project uses ensemble learning to distinguish between confirmed exoplanets, planet candidates, and false positives based on six key physical features extracted from Kepler and TESS mission data.
       </p>
     </td>
   </tr>
@@ -17,13 +17,13 @@
 
 
 ## Problem Statement
-The Kepler Space Telescope has detected thousands of potential exoplanet signals, but many are false positives caused by eclipsing binary stars, stellar activity, or instrumental noise. Manual verification is time-consuming and requires expert analysis. This project automates the classification process using machine learning trained on 16,262 labeled examples.
+The Kepler and TESS Space Telescope have detected thousands of potential exoplanet signals, but many are false positives caused by eclipsing binary stars, stellar activity, or instrumental noise. Manual verification is time-consuming and requires expert analysis. This project automates the classification process using machine learning trained on 16,262 labeled examples.
 
 ## Architecture
 
 ### Data Pipeline
 ```
-Kepler Light Curves → Feature Extraction → ML Classification → Candidate Ranking
+Kepler/TESS Light Curves → Feature Extraction → ML Classification → Candidate Ranking
 ```
 
 **Input Features (6 physical parameters):**
@@ -75,7 +75,7 @@ Kepler Light Curves → Feature Extraction → ML Classification → Candidate R
 ```
 
 ## Dataset
-- **Source:** Kepler mission consolidated catalog
+- **Source:** Kepler and TESS mission consolidated catalog
 - **Size:** 16,262 labeled examples
 - **Features:** 6 physical parameters per observation
 - **Distribution:**
@@ -103,11 +103,6 @@ cd NasaSpaceApps2025-SCP
 
 # Install dependencies using uv
 uv sync
-
-# Activate virtual environment
-source .venv/bin/activate  # Linux/Mac
-# or
-.venv\Scripts\activate  # Windows
 ```
 
 ## Usage
