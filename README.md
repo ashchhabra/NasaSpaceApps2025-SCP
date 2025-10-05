@@ -118,6 +118,31 @@ python train.py configs/model_config.yaml
 # Train with custom data path
 python train.py configs/model_config.yaml src/data/your_data.csv
 ```
+### Dockerization
+```bash
+# Create a docker image
+docker build -t <docker-image> .
+
+# Run a Docker container
+docker run -d --name <docker-container-name> <docker-image>
+
+# Check your app logs
+docker logs -f <cotainer-id> #container-id is created after running a docker container above
+
+# optional- push docker image to Azure Container registry  d
+az acr login --name <azure-container-registry-name>
+docker tag <docker-image> <azure-container-registry-name>.azurecr.io/<docker-image>:latest
+docker push <azure-container-registry-name>/<docker-image>:latest
+
+# optional- Deploy on Azure WebApp
+az appservice plan create --name <app-service-plan> --resource-group <rg-name> --sku F1 --is-linux --location canadacentral
+	
+	az webapp create \
+  --resource-group <rg-name> \
+  --plan <app-service-plan> \
+  --name <your-app-name> \
+  --deployment-container-image-name <azure-username>/<docker-image>:latest
+```
 
 **Expected Output:**
 ```
@@ -267,6 +292,7 @@ After training, three files are saved in `models/`:
 ├── scripts/                   # Dataset consolidation tools
 ├── models/                    # Saved trained models (gitignored)
 ├── train.py                  # Training script
+├── Dockerfile  
 └── README.md                 # This file
 ```
 
@@ -310,7 +336,7 @@ Actual Conf   41   189   566
 5. **stars_radii** (12.67%) - Host star characterization
 6. **star_temp** (12.43%) - Stellar type identification
 
-See `agent/FEATURES.md` for detailed explanations.
+
 
 ## Configuration
 
