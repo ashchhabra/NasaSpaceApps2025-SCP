@@ -13,6 +13,7 @@ class ExoplanetEnsemble:
 
     def fit(self, X, y, X_val=None, y_val=None):
         """Train all models in the ensemble"""
+        print(f"Training ensemble with {len(self.models)} models ({self.strategy} strategy)") # test
         for model in self.models:
             if hasattr(model, 'train'):
                 model.train(X, y, X_val, y_val)

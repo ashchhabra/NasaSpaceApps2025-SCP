@@ -22,4 +22,4 @@ rand_forest:
 
 ensemble_strategy: voting  # Options: voting, weighted, stacking
 
-pretrained_model_path: null  # Path to pretrained model if available
+pretrained_model_path: null

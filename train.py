@@ -101,7 +101,8 @@ def main():
 
     # Save model
     #model_path = 'models/adaboost_exoplanet.cbm'
-    model_path = 'models/randm_forest_exoplanet.joblib' # commented
+    #model_path = 'models/randm_forest_exoplanet.joblib' # commented
+    model_path = 'models/ensemble_exoplanet'
     print(f"\nSaving model to {model_path}")
     pipeline.save_model(model_path)
     print("Model and scaler saved successfully!")
