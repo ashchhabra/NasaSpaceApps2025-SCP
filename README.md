@@ -157,16 +157,12 @@ RandomForest:
 ENSEMBLE PERFORMANCE
 ============================================================
 
-Test Accuracy: 0.6489
-
 Detailed Classification Report:
                 precision    recall  f1-score   support
 
-false_positive       0.75      0.68      0.71      1129
-     candidate       0.65      0.58      0.62      1328
-     confirmed       0.55      0.71      0.62       796
-
-      accuracy                           0.65      3253
+false_positive       0.35      0.53      0.42       212
+     candidate       0.63      0.70      0.66       953
+     confirmed       0.92      0.83      0.87      2088
 ```
 
 ### Saved Models
