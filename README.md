@@ -362,7 +362,7 @@ ensemble_strategy: voting  # voting, weighted, or stacking
 **Challenge Category:** Exoplanet Detection and Characterization
 
 **Our Approach:**
-1. Leveraged Kepler mission's public data archive
+1. Leveraged Kepler and Tessa's mission's public data archive
 2. Engineered 6 physically meaningful features from transit photometry
 3. Applied ensemble ML for robust classification
 4. Achieved 65% accuracy with 71% recall on confirmed planets
