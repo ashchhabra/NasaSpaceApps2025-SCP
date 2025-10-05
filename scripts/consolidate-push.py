@@ -66,7 +66,7 @@ def process_kepler():
     }
 
     # Keep only the relevant columns + disposition + kepid
-    cols_to_keep = ['kepid', 'disposition'] + list(column_map.keys())
+    cols_to_keep = ['kepid', 'koi_disposition'] + list(column_map.keys())
     available_cols = [col for col in cols_to_keep if col in df_planet.columns]
 
     df_planet_sub = df_planet[available_cols].copy()
@@ -83,9 +83,9 @@ def process_kepler():
         'FALSE POSITIVE': 0
     }
 
-    if 'disposition' in df_planet_sub.columns:
-        df_planet_sub['label'] = df_planet_sub['disposition'].str.upper().map(label_map).fillna(1).astype(int)
-        df_planet_sub = df_planet_sub.drop(columns=['disposition'])
+    if 'koi_disposition' in df_planet_sub.columns:
+        df_planet_sub['label'] = df_planet_sub['koi_disposition'].str.upper().map(label_map).fillna(1).astype(int)
+        df_planet_sub = df_planet_sub.drop(columns=['koi_disposition'])
     else:
         df_planet_sub['label'] = 2  # default label
 
