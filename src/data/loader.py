@@ -17,16 +17,16 @@ class DataLoader:
 
     # Class labels mapping
     CLASS_LABELS = {
-        'confirmed': 0,
+        'false_positive': 0,
         'candidate': 1,
-        'false_positive': 2
+        'confirmed': 2
     }
 
     def __init__(self):
         """Enhanced loader with feature validation and normalization"""
         self.scaler = StandardScaler()
         self.label_encoder = LabelEncoder()
-        self.label_encoder.classes_ = np.array(['confirmed', 'candidate', 'false_positive'])
+        self.label_encoder.classes_ = np.array(['false_positive', 'candidate', 'confirmed'])
         self.names = None  # Store names if present
 
     def validate_features(self, df: pd.DataFrame) -> pd.DataFrame:

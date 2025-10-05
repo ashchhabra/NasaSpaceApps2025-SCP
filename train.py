@@ -66,7 +66,7 @@ def main():
 
     # Convert probabilities to class indices
     y_pred = []
-    class_map = {'confirmed': 0, 'candidate': 1, 'false_positive': 2}
+    class_map = {'false_positive': 0, 'candidate': 1, 'confirmed': 2}
     for pred in predictions:
         y_pred.append(class_map[pred['classification']])
 
@@ -77,14 +77,14 @@ def main():
     # Detailed classification report
     print("\nDetailed Classification Report:")
     print(classification_report(y_test, y_pred,
-                                target_names=['confirmed', 'candidate', 'false_positive']))
+                                target_names=['false_positive', 'candidate', 'confirmed']))
 
     # Confusion matrix
     print("\nConfusion Matrix:")
     cm = confusion_matrix(y_test, y_pred)
     print("              Predicted")
-    print("             Conf  Cand  FalsePos")
-    labels = ['Confirmed', 'Candidate', 'FalsePos']
+    print("             FalsePos  Cand  Conf")
+    labels = ['FalsePos', 'Candidate', 'Confirmed']
     for i, label in enumerate(labels):
         print(f"Actual {label:9s}: {cm[i][0]:4d} {cm[i][1]:4d} {cm[i][2]:4d}")
 

@@ -19,6 +19,7 @@ class ExoplanetAdaBoostModel:
             'early_stopping_rounds': None,  # Disable early stopping temporarily
             'task_type': 'CPU',  # or 'GPU' if available
             'auto_class_weights': 'Balanced',  # Handle class imbalance
+            'od_type': 'None',  # Disable overfitting detector
             'l2_leaf_reg': 2.0,  # Reduced L2 regularization
             'min_data_in_leaf': 10,  # Allow smaller leaves with more data
             'random_strength': 1.0,  # Randomness for scoring
