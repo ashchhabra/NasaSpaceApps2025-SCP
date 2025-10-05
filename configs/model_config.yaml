@@ -19,3 +19,7 @@ random_forest:
 ensemble_strategy: voting  # Options: voting, weighted, stacking
 
 pretrained_model_path: null  # Path to pretrained model if available
+
+# stacking: 75.10
+# weighted 77.10
+# voting: 76.98
