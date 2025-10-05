@@ -195,9 +195,9 @@ After training, three files are saved in `models/`:
 ## Performance Metrics
 
 ### Overall Performance
-- **Test Accuracy:** 64.89%
-- **Macro Average F1-Score:** 0.65
-- **Weighted Average F1-Score:** 0.65
+- **Test Accuracy:** 76.98%
+- **Macro Average F1-Score:** 0.87
+- **Weighted Average F1-Score:** 0.87
 
 ### Per-Class Performance
 
@@ -205,7 +205,7 @@ After training, three files are saved in `models/`:
 |-------|-----------|--------|----------|---------|
 | **False Positive** | 0.75 | 0.68 | 0.71 | 1,129 |
 | **Candidate** | 0.65 | 0.58 | 0.62 | 1,328 |
-| **Confirmed** | 0.55 | 0.71 | 0.62 | 796 |
+| **Confirmed** | 0.92 | 0.83 | 0.87 | 796 |
 
 ### Confusion Matrix
 ```
