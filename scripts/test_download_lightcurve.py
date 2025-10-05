@@ -7,12 +7,14 @@ from tsfresh import extract_relevant_features
 import inspect
 from tsfresh.feature_extraction import feature_calculators
 
+
 # ==================== CONFIGURE BATCH/PATHS ===================
-BATCH_SIZE = 1000
+BATCH_SIZE = 100  # Smaller batch size for faster processing and smaller files
 CACHE_DIR = "lightcurve_batches"
 FEATURES_DIR = "feature_batches"
 os.makedirs(CACHE_DIR, exist_ok=True)
 os.makedirs(FEATURES_DIR, exist_ok=True)
+
 
 # ================== HELPERS FOR MISSIONS ======================
 def detect_mission_author(star_name):
@@ -25,6 +27,7 @@ def detect_mission_author(star_name):
     else:
         return None, None
 
+
 # ============= UNIFORM SAMPLING AND IMPUTATION ================
 def uniform_resample_and_impute(time, flux):
     valid_mask = np.isfinite(time) & np.isfinite(flux)
@@ -36,6 +39,7 @@ def uniform_resample_and_impute(time, flux):
     df['flux'] = df['flux'].interpolate(method='linear', limit_direction='both')
     df['flux'] = df['flux'].bfill().ffill()
     return df
+
 
 # ============= FETCH AND PREPROCESS LIGHT CURVES ==============
 def get_lightcurve_df(star_name):
@@ -73,6 +77,7 @@ def get_lightcurve_df(star_name):
         print(f"An error occurred for {star_name}: {e}")
         return None
 
+
 # =========== FEATURE DOCUMENTATION AUTO-EXPORT ===========
 def get_tsfresh_feature_docs(feature_columns):
     feat_docs = {}
@@ -91,6 +96,7 @@ def get_tsfresh_feature_docs(feature_columns):
         })
     return pd.DataFrame(rows)
 
+
 def save_feature_doc_to_readme(features_df, filename="README.md"):
     doc_df = get_tsfresh_feature_docs(features_df.columns)
     with open(filename, 'w') as f:
@@ -102,15 +108,15 @@ def save_feature_doc_to_readme(features_df, filename="README.md"):
             f.write(f"| `{row['feature']}` | {desc} |\n")
     print(f"Feature documentation saved to {filename}")
 
+
 # ============ BATCH-PROCESSING LOOP =====================
 def process_and_save_batch(df_planets, batch_number, start_idx, end_idx):
     all_lc_rows = []
     y = {}
     failed_ids = set()
-    batch_file = os.path.join(CACHE_DIR, f"lc_batch_{batch_number}.parquet")
-    features_file = os.path.join(FEATURES_DIR, f"features_batch_{batch_number}.parquet")
     batch_total = end_idx - start_idx
     print(f"\nProcessing batch {batch_number}: rows {start_idx} to {end_idx-1} (total: {batch_total})")
+
     for j, i in enumerate(range(start_idx, end_idx)):
         row = df_planets.iloc[i]
         star_name = row['name']
@@ -125,56 +131,59 @@ def process_and_save_batch(df_planets, batch_number, start_idx, end_idx):
         else:
             print(f"-> Skipping {star_name} (CSV idx {i}): no valid light curve")
             failed_ids.add(i)
+
     if not all_lc_rows:
         print(f"No valid light curves processed in batch {batch_number}.")
         return None, None
+
     all_lc_df = pd.concat(all_lc_rows, ignore_index=True)
-    all_lc_df.to_parquet(batch_file)
+    all_lc_df.to_parquet(os.path.join(CACHE_DIR, f"lc_batch_{batch_number}.parquet"))
+
     y_series = pd.Series(y)
+
     print(f"\nExtracting TSFresh features for batch {batch_number} ({batch_total} processed)...")
     features = extract_relevant_features(
         all_lc_df,
         y_series,
         column_id='id',
         column_sort='time',
-        n_jobs=-1
+        n_jobs=8
     )
-    features.to_parquet(features_file)
+    
+    # Align features with the batch DataFrame and drop failed rows from the original batch
+    batch_orig = df_planets.iloc[start_idx:end_idx].drop(index=list(failed_ids), errors='ignore')
+    # Ensure features and batch_orig align on index
+    features = features.loc[batch_orig.index.intersection(features.index)]
+    
+    # Join original data columns with extracted features
+    batch_with_features = batch_orig.join(features, how='left')
+
+    # Save combined batch CSV file with original columns and features
+    batch_csv_path = os.path.join(FEATURES_DIR, f"features_batch_{batch_number}.csv")
+    batch_with_features.to_csv(batch_csv_path, index=False)
+    print(f"Saved batch {batch_number} CSV with features to {batch_csv_path}")
+
     return features, failed_ids
+
 
 # ================== MAIN DRIVER =========================
 def main():
     input_csv = './consolidated.csv'
     df_planets = pd.read_csv(input_csv)
     n = len(df_planets)
-    all_feature_dfs = []
     all_failed_ids = set()
 
     for batch_start in range(0, n, BATCH_SIZE):
         batch_number = batch_start // BATCH_SIZE
         batch_end = min(batch_start + BATCH_SIZE, n)
         print(f"\n====== Starting batch {batch_number} ({batch_start} to {batch_end-1}) ======")
-        features, failed_ids = process_and_save_batch(df_planets, batch_number, batch_start, batch_end)
-        if features is not None:
-            all_feature_dfs.append(features)
-            all_failed_ids.update(failed_ids)
+        _, failed_ids = process_and_save_batch(df_planets, batch_number, batch_start, batch_end)
+        all_failed_ids.update(failed_ids)
 
-    if all_feature_dfs:
-        final_features = pd.concat(all_feature_dfs, axis=0)
-        final_features = final_features.reset_index().rename(columns={"id": "id_feature"})
-        df_out = df_planets.loc[~df_planets.index.isin(all_failed_ids)].reset_index(drop=True)
-        final_features = final_features.reset_index().rename(columns={"index": "id"})
-        merged = df_out.join(final_features)
-        output_parquet = "planets_with_tsfresh.parquet"
-        output_csv = "planets_with_tsfresh.csv"
-        merged.to_parquet(output_parquet, index=False)
-        print(f"\nAll features saved to {output_parquet}")
-        merged.to_csv(output_csv, index=False)
-        print(f"All features also saved to {output_csv}")
-        print("\nBuilding feature documentation...")
-        save_feature_doc_to_readme(final_features, filename="README.md")
-    else:
-        print("No features produced in any batch.")
+    print(f"\nProcessing complete. Total failed IDs: {len(all_failed_ids)}")
+
+    # Optional: create master CSV by concatenating batch CSVs (if desired)
+    # You can implement this if you want a combined CSV after batch processing
 
 if __name__ == "__main__":
     main()
