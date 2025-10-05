@@ -1,7 +1,20 @@
 # Exoplanet Detection Pipeline - NASA Space Apps 2025
 
-## Overview
-A machine learning pipeline for classifying exoplanet candidates from transit photometry data. This project uses ensemble learning to distinguish between confirmed exoplanets, planet candidates, and false positives based on six key physical features extracted from Kepler mission data.
+<table>
+  <tr>
+    <td style="vertical-align: middle; padding-right: 10px;">
+        <img src="https://github.com/user-attachments/assets/d5240e16-c67c-418c-89f2-fe0ec1db14ea" width="300" />
+    </td>
+    <td style="vertical-align: middle;">
+      <h1 style="margin: 0;">Overview</h1>
+      <p style="margin: 5px 0 0 0;">
+        A machine learning pipeline for classifying exoplanet candidates from transit photometry data. This project uses ensemble learning to distinguish between confirmed exoplanets, planet candidates, and false positives based on six key physical features extracted from Kepler mission data.
+      </p>
+    </td>
+  </tr>
+</table>
+
+
 
 ## Problem Statement
 The Kepler Space Telescope has detected thousands of potential exoplanet signals, but many are false positives caused by eclipsing binary stars, stellar activity, or instrumental noise. Manual verification is time-consuming and requires expert analysis. This project automates the classification process using machine learning trained on 16,262 labeled examples.
