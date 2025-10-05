@@ -1,4 +1,4 @@
-import gradio as gr           # 👈 This line was missing
+import gradio as gr
 from catboost import CatBoostClassifier
 import joblib
 import pickle
@@ -20,16 +20,16 @@ features = ["planet_radii", "transit_depth", "days", "stars_radii", "earth_flux"
 def predict_exoplanet(planet_radii, transit_depth, days, stars_radii, earth_flux, star_temp):
     X = np.array([[planet_radii, transit_depth, days, stars_radii, earth_flux, star_temp]])
     X_scaled = scaler.transform(X)
-    
+
     pred1 = adaboost.predict(X_scaled)
     pred2 = random_forest.predict(X_scaled)
-    
+
     # Ensemble voting (simple majority)
     final_pred = np.round((pred1 + pred2) / 2).astype(int)
-    
+
     classes = ["false_positive", "candidate", "confirmed"]
     result = classes[int(final_pred[0])]
-    
+
     return f"Predicted Class: **{result}**"
 
 # Create Gradio interface

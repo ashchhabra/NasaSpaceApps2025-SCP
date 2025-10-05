@@ -1,0 +1,17 @@
+uv
+pandas
+numpy
+scikit-learn
+torch --index-url https://download.pytorch.org/whl/cpu
+torchvision
+lightkurve>=2.5.1
+astropy
+catboost>=1.2.8
+numpy
+pandas>=2.3.3
+pyyaml>=6.0.3
+scikit-learn>=1.7.2
+tsfresh>=0.21.1
+traitlets>=5.14.3
+ipywidgets>=8.1.7
+gradio>=3.52.0  # Add this if your app uses Gradio
